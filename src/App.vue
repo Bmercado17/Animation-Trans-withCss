@@ -1,8 +1,18 @@
-
-
+<!-- ANIMATION WITH CSS AND JS CHECKING TRANS IN THE CONSOLE -->
 
 <template>
-  <button type="button" @click="flag = !flag">Toggle Ani</button>
+  <!-- b4-enter,enter,ftr-enter//b4-leave,leave,ftr-leave animations vueHooks -->
+
+  
+  <button type="button" @click="flag=!flag">Toggle Ani</button>
+  <transition
+    @before-enter="beforeEnter"
+    @enter="enter"
+    @after-enter="afterEnter"
+    @before-leave="beforeLeave"
+    @leave="leave"
+    @after-leave="afterLeave">
+    <H2 v-if="flag">Animated</H2>
   <!-- because of the name 'fade' in the transition tag, is targeted as a class inthe css  -->
   <!-- <transition name="fade" mode="in-out">
     <h2 v-if="flag" key="main" >Animate</h2>
@@ -11,8 +21,8 @@
    
   </transition> -->
   <!-- add 'type to trigger wheter animation or transition' you want to create -->
-  <transition name="zoom" type="animation">  
-    <h3 v-if="flag">Basic message</h3>
+  <!-- <transition name="zoom" type="animation">  
+    <h3 v-if="flag">Basic message</h3> -->
   </transition>
    <!--we can either use v-if or v-show to toggle the effect-->
 </template>
@@ -26,6 +36,28 @@
       return{
         flag: false,
       }
+    },
+    methods:{
+      beforeEnter(el,done){
+          console.log("before enter")
+      },
+      enter(el,done){
+        done();
+        console.log("enter")
+      },
+      afterEnter(el,done){
+       console.log("after enter")
+      },
+      beforeLeave(el,done){
+        console.log("before leave")
+      },
+      leave(el,done){
+        done();
+        console.log("leave")
+      },
+      afterLeave(el,done){
+      console.log("after leave")
+      }
     }
   }
 
@@ -38,7 +70,7 @@ h2 {
   margin: 20px;
 }
 /* animating the transition with duration, setting the transition mode in the template and in the css */
-  .fade-enter-from {
+  /* .fade-enter-from {
     opacity: 0;
   }
   .fade-enter-active {
@@ -47,7 +79,7 @@ h2 {
   .fade-leave-to {
     transition: all 1.5s linear;
     opacity: 0;
-  }
+  } */
 
   /* frm lne 55 to lne 76 along with the code on lne 13 with name='zoom' which is used as a class creates zoom in n out effect */
 
@@ -60,10 +92,10 @@ h2 {
     transition: all 1.5s linear;
   }
 
-  zoom-enter-from {
+  .zoom-enter-from {
     opacity: 0;
   }
-  zoom-leave-to {
+  .zoom-leave-to {
     opacity: 0;
   }
   @keyframes zoom-in {
