@@ -4,15 +4,18 @@
   <!-- b4-enter,enter,ftr-enter//b4-leave,leave,ftr-leave animations vueHooks -->
 
   
-  <button type="button" @click="flag=!flag">Toggle Ani</button>
-  <transition
+  <!-- <button type="button" @click="flag=!flag">Toggle Ani</button> -->
+  <!-- <transition
     @before-enter="beforeEnter"
     @enter="enter"
     @after-enter="afterEnter"
     @before-leave="beforeLeave"
     @leave="leave"
-    @after-leave="afterLeave">
-    <H2 v-if="flag">Animated</H2>
+    @after-leave="afterLeave"
+    :css="true"
+    name="fade"
+    >
+    <H2 v-if="flag">Animated</H2> -->
   <!-- because of the name 'fade' in the transition tag, is targeted as a class inthe css  -->
   <!-- <transition name="fade" mode="in-out">
     <h2 v-if="flag" key="main" >Animate</h2>
@@ -23,8 +26,25 @@
   <!-- add 'type to trigger wheter animation or transition' you want to create -->
   <!-- <transition name="zoom" type="animation">  
     <h3 v-if="flag">Basic message</h3> -->
-  </transition>
+  <!-- </transition> -->
    <!--we can either use v-if or v-show to toggle the effect-->
+
+
+  <!-- DIFFERENT ANIMATION USING SPLICE, INDEX AND V-FOR  AND TRANSITION-GROUP-->
+
+  <div>
+    <button @click="addItem">ADD</button>
+
+  </div>
+  <ul>
+  <transition-group name="fade">
+    <li v-for= "(number, index) in numbers" :key="number"
+    @click="removeItem(index)"
+    >
+    {{ number }}
+    </li>
+  </transition-group>
+  </ul>
 </template>
   <!--  vue logic  -->
 
@@ -35,28 +55,54 @@
       // to create the toggle effect connected with the button 'flag starts as false' and toggles with statement at button
       return{
         flag: false,
+        numbers: [1,2,3,4,5],
       }
     },
     methods:{
       beforeEnter(el,done){
           console.log("before enter")
       },
-      enter(el,done){
-        done();
-        console.log("enter")
+      addItem(){
+        let num = Math.floor(Math.random()*100+1);
+        let index = Math.floor(Math.random()* this.numbers.length);
+        this.numbers.splice(index, 0, num)
+
       },
-      afterEnter(el,done){
-       console.log("after enter")
+      removeItem(index){
+        this.numbers.splice(index,1)
       },
-      beforeLeave(el,done){
-        console.log("before leave")
+      // hook function enter
+      enter(el){
+        console.log('enter fired',el)
+
+        // let animation = el.animate([{transform: 'scale3d(0,0,0)'},{}],{duration:1000})
+        
+        // animation.onfinish = ()=>{
+        //   done()
+        // }
       },
-      leave(el,done){
-        done();
-        console.log("leave")
+      //hook function ended
+      afterEnter(el){
+       console.log("after enter",el)
       },
-      afterLeave(el,done){
-      console.log("after leave")
+      beforeLeave(el){
+        console.log("before leave",el)
+      },
+      //hook function leave
+      leave(el){
+        
+        console.log("leave",el)
+       
+
+        // let animation = el.animate([{},{transform: 'scale3d(0,0,0)'}],{duration:1000})
+        
+        // animation.onfinish = ()=>{
+        //   done()
+        // }
+      },
+      //hook function ended
+      afterLeave(el){
+      console.log("after leave",el)
       }
     }
   }
@@ -64,13 +110,26 @@
 </script>
 
 <style>
+body {
+  background-color: gray;
+}
+button {
+  display: flex;
+  justify-content: left;
+
+}
+ul,li {
+  color: black;
+  background-color: orange;
+}
+
 h2 {
   width: 200px;
   padding: 20px;
   margin: 20px;
 }
 /* animating the transition with duration, setting the transition mode in the template and in the css */
-  /* .fade-enter-from {
+  .fade-enter-from {
     opacity: 0;
   }
   .fade-enter-active {
@@ -79,7 +138,7 @@ h2 {
   .fade-leave-to {
     transition: all 1.5s linear;
     opacity: 0;
-  } */
+  }
 
   /* frm lne 55 to lne 76 along with the code on lne 13 with name='zoom' which is used as a class creates zoom in n out effect */
 
